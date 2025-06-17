@@ -4,6 +4,7 @@ import http from 'http';
 import { Server } from 'socket.io';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
+import userRoute from './routes/userRoute.js';
 
 dotenv.config();
 
@@ -16,6 +17,9 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use('/api/auth', userRoute);
 
 
 
