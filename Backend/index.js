@@ -5,6 +5,7 @@ import { Server } from 'socket.io';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import userRoute from './routes/userRoute.js';
+import msgRoute from './routes/msgRoute.js';
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth', userRoute);
+app.use('/api/msg', msgRoute);
 
 
 
