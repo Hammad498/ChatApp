@@ -5,14 +5,14 @@ import styled from 'styled-components'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useState,useEffect } from 'react'
-import { Navigate } from 'react-router-dom'
-import { registerUser } from '../features/auth/authApi.js'
+import { useNavigate } from 'react-router-dom'
+import { registeruser } from '../features/auth/authApi.js'
 import { toast } from 'react-toastify'
 
 
 const Register = () => {
   const dispatch= useDispatch();
-  const navigate = Navigate();
+  const navigate = useNavigate();
   const { user,loading,error } = useSelector((state) => state.auth);
 
   const [values,setValues]=useState({
@@ -59,7 +59,7 @@ if (password !== confirmPassword) {
   const handleSubmit=(e)=>{
     e.preventDefault();
     if(handleValidation()){
-      dispatch(registerUser(values));
+      dispatch(registeruser(values));
     }
 
   }
@@ -69,7 +69,7 @@ if (password !== confirmPassword) {
     <FormContainer>
       <form onSubmit={handleSubmit}>
         <div className="brand">
-            <img src="" alt="" />
+            {/* <img src="" alt="" /> */}
             <h1>Chat</h1>
           </div>
           <input
@@ -92,6 +92,7 @@ if (password !== confirmPassword) {
             name="password"
             onChange={handleChange}
             value={values.password}
+            autoComplete="current-password" 
           />
            <input
             type="password"

@@ -1,19 +1,20 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { Navigate } from 'react-router-dom'
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 
-const ProtectedRoute = ({childern}) => {
+const ProtectedRoute = ({ children }) => {
+  const { user } = useSelector((state) => state.auth);
 
-    const { user } = useSelector((state) => state.auth)
+  const storedUser = JSON.parse(localStorage.getItem('chat-app-user'));
+  const isAuthenticated = user || storedUser;
 
-    const iSAuthenticated = user || localStorage.getItem('chat-app-user')
+  if (!isAuthenticated) return <Navigate to="/login" />;
 
-    return iSAuthenticated ? (
-        childern
-    ) : (
-        <Navigate to="/login" />
-    )
+  const currentUser = user || storedUser;
 
-}
+  if (!currentUser.isAvatarImageSet) return <Navigate to="/set-avatar" />;
 
-export default ProtectedRoute
+  return children;
+};
+
+export default ProtectedRoute;
