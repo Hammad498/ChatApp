@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import userRoute from './routes/userRoute.js';
 import msgRoute from './routes/msgRoute.js';
+import imageRoute from './routes/imageRoute.js';
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth', userRoute);
 app.use('/api/msg', msgRoute);
+app.use('/api/image', imageRoute);
 
 
 

@@ -14,7 +14,7 @@ export const uploadImage=async(req,res)=>{
         }
         
         user.avatarImage = req.file.path; 
-        user.isAvatarImageSe = true;
+        user.isAvatarImageSet = true;
         await user.save();
         return res.status(200).json({message: "Image uploaded successfully", avatarImage: user.avatarImage});
 

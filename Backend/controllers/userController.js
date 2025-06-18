@@ -74,13 +74,44 @@ export const loginUser = async (req, res) => {
 
 //////////////////////////////////////////////
 
-export const logOutUser = async (req, res) => {
+
+
+export const logOutUser=async(req,res)=>{
     try {
+        if(!req.params.id) return res.json({ message: "user id is required" });
         // Clear the token cookie
         res.cookie('token', '', { expires: new Date(0), httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-        
-        res.status(200).json({ message: "User logged out successfully" });
+        onlineUsers.delete(req.params.id); // Assuming onlineUsers is a Set or Map tracking online users
+       
+
+        res.status(200).json({
+            success:true,
+            message:"User logged out successfully"
+        });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        return res.status(500).json({
+            success:false,
+            message:"Failed to log out!",
+            error
+        })
     }
 }
+///////////////////////////////////////////
+
+
+export const getAllUsers=async(req,res)=>{
+    try {
+        const user=await User.find({_id: {$ne: req.params.id}}).select([
+            "email","username","_id","isAvatarImageSet","avatarImage"
+            ]);
+
+        res.status(200).json(user);
+
+    } catch (error) {
+        return res.status(500).json({ message: "Error fetching users", error: error.message });
+    }
+}
+//////////////////////////////////////////////
+
+
+export const setAvatar=async(req,res)=>{}

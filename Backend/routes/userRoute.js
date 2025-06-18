@@ -1,11 +1,13 @@
 import { Router } from "express";
-import { registerUser, loginUser,logOutUser } from "../controllers/userController.js";
+import { registerUser, loginUser,logOutUser,getAllUsers,setAvatar } from "../controllers/userController.js";
 
 const router= Router();
 
 router.post("/register",registerUser);
 router.post("/login",loginUser);
-router.post('/logout',logOutUser);
+router.get('/logout/:id',logOutUser);
+router.get("/get/:id",getAllUsers);
+router.post('/setAvatar/:id',setAvatar);
 
-
+user
 export default router;
