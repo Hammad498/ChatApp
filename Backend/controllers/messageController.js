@@ -8,16 +8,14 @@ export const getAllMsg=async(req,res)=>{
     }
     try {
         const messages = await Message.find({
-            users: {
-                $all: [from, to]
-            }
-            // $or:[{sender : from, reciever : to,},{sender : to, reciever : from,}]
+            
+            $or:[{sender : from, receiver : to,},{sender : to, receiver : from,}]
         }).sort({updatedAt: 1});
         
         const projectedMessages = messages.map(msg => {
             return {
                 fromSelf: msg.sender.toString() === from,
-                message: msg.message
+                message: msg.message.text
             };
         });
         

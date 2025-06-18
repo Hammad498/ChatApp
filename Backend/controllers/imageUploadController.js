@@ -2,7 +2,7 @@ import User from "../models/user.model.js"
 
 
 export const uploadImage=async(req,res)=>{
-    const {userId}=req.body;
+    const userId=req.user.id;
     if(!userId || !req.file){
         return res.status(400).json({message: "User ID and image file are required"});
     }
