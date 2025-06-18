@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 
+
 export const registerUser = async (req, res) => {
     const {username,email,password,confirmPassword} = req.body;
     if (!username || !email || !password || !confirmPassword) {
@@ -45,7 +46,7 @@ export const loginUser = async (req, res) => {
     }
 
     try {
-        const user = await User.find({email});
+        const user = await User.findOne({email});
         if(!user){
             return res.status(400).json({ message: "User not found" });
         }
@@ -99,6 +100,8 @@ export const logOutUser=async(req,res)=>{
 ///////////////////////////////////////////
 
 
+///get all the users except the one who searches 
+
 export const getAllUsers=async(req,res)=>{
     try {
         const user=await User.find({_id: {$ne: req.params.id}}).select([
@@ -117,7 +120,7 @@ export const getAllUsers=async(req,res)=>{
 export const setAvatar=async(req,res)=>{
    try {
      const userId=req.params.id;
-    const avatarImage=req.body.image;
+    const avatarImage=req.file?.filename;
     if(!userId || !avatarImage){
         return res.status(400).json({ message: "User ID and avatar image are required" });
     }

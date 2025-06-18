@@ -38,7 +38,7 @@ export const addMsg=async(req,res)=>{
             message: { text: message },
             // users: [from, to],
             sender: from,
-            reciever: to
+            receiver: to
         });
         
         if(data){

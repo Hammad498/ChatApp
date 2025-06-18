@@ -4,9 +4,7 @@ import { Schema } from "mongoose";
 
 const messageSchema=new Schema({
     message: {
-        type: String,
-        required: true,
-        trim: true
+      text: { type: String, required: true }
     },
     sender: {
         type: mongoose.Schema.Types.ObjectId,

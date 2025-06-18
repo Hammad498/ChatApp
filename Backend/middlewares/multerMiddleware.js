@@ -32,3 +32,6 @@ export const uploadMiddleware = (req, res, next) => {
     next();
   });
 };
+
+////    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NTI1NGY5ZWI4MGVhZTUyMmIwOTkzYiIsImlhdCI6MTc1MDIyNzU3NCwiZXhwIjoxNzUwMjYzNTc0fQ.8uLMcGMh0mtCSw2kGnNs2wu_dfU-_cgYC3Mjf7gmpKU
+///             http://localhost:3000/api/auth/setAvatar/685254f9eb80eae522b0993b
