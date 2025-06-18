@@ -9,5 +9,5 @@ router.get('/logout/:id',logOutUser);
 router.get("/get/:id",getAllUsers);
 router.post('/setAvatar/:id',setAvatar);
 
-user
+
 export default router;

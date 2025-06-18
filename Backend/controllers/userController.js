@@ -114,4 +114,30 @@ export const getAllUsers=async(req,res)=>{
 //////////////////////////////////////////////
 
 
-export const setAvatar=async(req,res)=>{}
+export const setAvatar=async(req,res)=>{
+   try {
+     const userId=req.params.id;
+    const avatarImage=req.body.image;
+    if(!userId || !avatarImage){
+        return res.status(400).json({ message: "User ID and avatar image are required" });
+    }
+
+    const user=await User.findByIdAndUpdate(userId,{
+        isAvatarImageSet: true,
+        avatarImage: avatarImage
+    },{new: true});
+
+    if (!user) {
+        return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+        isSet: user.isAvatarImageSet,
+        image: user.avatarImage
+    });
+   } catch (error) {
+    console.log("Error setting avatar:", error);
+       return res.status(500).json({ message: "Error setting avatar", error: error.message });
+    
+   }
+}
