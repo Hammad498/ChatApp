@@ -12,7 +12,10 @@ const ProtectedRoute = ({ children }) => {
 
   const currentUser = user || storedUser;
 
-  if (!currentUser.isAvatarImageSet) return <Navigate to="/set-avatar" />;
+  if (!currentUser.isAvatarImageSet && window.location.pathname !== "/set-avatar") {
+  return <Navigate to="/set-avatar" />;
+}
+
 
   return children;
 };

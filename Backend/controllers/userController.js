@@ -2,6 +2,7 @@ import User from "../models/user.model.js";
 
 
 export const registerUser = async (req, res) => {
+    // console.log("Incoming Register Payload:", req.body);
     const {username,email,password,confirmPassword} = req.body;
     if (!username || !email || !password || !confirmPassword) {
         return res.status(400).json({ message: "All fields are required" });
@@ -15,6 +16,8 @@ export const registerUser = async (req, res) => {
         if (existingUser) {
             return res.status(400).json({ message: "User already exists" });
         }
+        console.log("existingUser:", existingUser);
+
         const newUser = new User({
             username,
             email,
@@ -23,6 +26,7 @@ export const registerUser = async (req, res) => {
 
         await newUser.save();
         const token = newUser.generateAuthToken();
+        // console.log("Token:", token);
         res.status(201).json({
             message: "User registered successfully",
             user: {
@@ -32,7 +36,7 @@ export const registerUser = async (req, res) => {
                 isAvatarImageSet: newUser.isAvatarImageSet,
                 avatarImage: newUser.avatarImage
             },
-            
+            token: token
         });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
@@ -41,20 +45,23 @@ export const registerUser = async (req, res) => {
 //////////////////////////////////////////////
 export const loginUser = async (req, res) => {
     const {email,password} = req.body;
+    console.log("API login payload:", req.body);
     if (!email || !password) {
         return res.status(400).json({ message: "Email and password are required" });
     }
 
     try {
-        const user = await User.findOne({email});
-        if(!user){
-            return res.status(400).json({ message: "User not found" });
-        }
+       const user = await User.findOne({ email });
+if (!user) {
+    console.log("No user found with email:", email);
+    return res.status(400).json({ message: "User not found" });
+}
 
-        const isPasswordValid = await user.comparePassword(password);
-        if (!isPasswordValid) {
-            return res.status(400).json({ message: "Invalid password" });
-        }
+const isPasswordValid = await user.comparePassword(password);
+if (!isPasswordValid) {
+    console.log("Invalid password for:", email);
+    return res.status(400).json({ message: "Invalid password" });
+}
         const token = user.generateAuthToken();
         res.status(200).json({
             message: "User logged in successfully",

@@ -56,13 +56,25 @@ if (password !== confirmPassword) {
       return true;
     };
 
-  const handleSubmit=(e)=>{
-    e.preventDefault();
-    if(handleValidation()){
-      dispatch(registeruser(values));
-    }
+  // const handleSubmit=(e)=>{
+  //   e.preventDefault();
+  //   if(handleValidation()){
+  //     dispatch(registeruser(values));
+  //   }
 
+  // }
+
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (handleValidation()) {
+    const resultAction = dispatch(registeruser(values));
+    if (registeruser.fulfilled.match(resultAction)) {
+      toast.success("Registered successfully! Redirecting to login...", toastOptions);
+      navigate('/login');
+    }
   }
+};
+
 
   return (
     <>
@@ -152,9 +164,10 @@ const FormContainer = styled.div`
   form {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
     background-color: #ece5dd;
-    padding: 3rem 5rem;
+    padding: 3rem 8rem;
+    border-radius: 3rem;
   }
   input {
     background-color: white;

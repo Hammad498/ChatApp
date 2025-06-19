@@ -30,9 +30,16 @@ function Login() {
   useEffect(() => {
     if (user) {
       localStorage.setItem('chat-app-user', JSON.stringify(user));
-      navigate('/');
+      navigate('/set-avatar');
     }
   }, [user, navigate]);
+
+  useEffect(() => {
+  if (error?.message) {
+    toast.error(error.message, toastOptions);
+  }
+}, [error]);
+
 
   const handleValidation = () => {
     const { email, password } = values;
@@ -50,6 +57,7 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (handleValidation()) {
+      console.log("Dispatching login with values:", values);
       dispatch(loginUser(values));
     }
   };
@@ -59,7 +67,7 @@ function Login() {
       <FormContainer>
         <form onSubmit={handleSubmit}>
           <div className="brand">
-            <img src="" alt="" />
+            {/* <img src="" alt="" /> */}
             <h1>Chat</h1>
           </div>
           <input
@@ -85,7 +93,7 @@ function Login() {
         </form>
       </FormContainer>
       <ToastContainer />
-      {error && <p style={{ color: 'red', textAlign: 'center' }}>{error.message || error}</p>}
+      {/* {error && <p style={{ color: 'red', textAlign: 'center' }}>{error.message || error}</p>} */}
     </>
   );
 }

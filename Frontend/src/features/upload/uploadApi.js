@@ -5,9 +5,14 @@ import API from "../../utils/axios.js";
 const uploadImage= createAsyncThunk('image/upload',async(file,thunkAPI)=>{
     try {
         const user = JSON.parse(localStorage.getItem("chat-app-user"));
+        console.log("User data from localStorage:", user);
         const formData = new FormData();
          formData.append("image", file);
-        const response=await API.post(`${import.meta.env.VITE_BACKEND_URL}/api/image/upload`,formData, {
+         const backendURL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
+         console.log("User token:", user?.token);
+
+        const response=await API.post(`${backendURL}/api/image/upload`,formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                  Authorization: `Bearer ${user.token}`,
@@ -21,6 +26,10 @@ const uploadImage= createAsyncThunk('image/upload',async(file,thunkAPI)=>{
       };
       localStorage.setItem("chat-app-user", JSON.stringify(updatedUser));
 
+      return {
+        avatarImage: response.data.avatarImage,
+        isAvatarImageSet: true,
+      };
       
     } catch (error) {
       return thunkAPI.rejectWithValue(

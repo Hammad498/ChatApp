@@ -42,9 +42,18 @@ userSchema.pre("save",async function(next){
 })
 
 //method to generate JWT token
-userSchema.methods.generateAuthToken = function() {
-    const token = jwt.sign({ id: this._id }, process.env.JWT_SECRET, { expiresIn: '10h' });
-    return token;
+// userSchema.methods.generateAuthToken = function() {
+//     const token = jwt.sign({ id: this._id }, process.env.JWT_SECRET, { expiresIn: '10h' });
+//     return token;
+// };
+
+userSchema.methods.generateAuthToken = function () {
+  const token = jwt.sign(
+    { _id: this._id, email: this.email },
+    process.env.JWT_SECRET || "defaultsecret",
+    { expiresIn: "7d" }
+  );
+  return token;
 };
 
 //method to compare password

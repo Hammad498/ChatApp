@@ -5,12 +5,15 @@ const API=axios.create({
     baseURL:'http://localhost:3000/api',
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}` // Assuming you store the token in localStorage
+        // 'Authorization': `Bearer ${localStorage.getItem('token')}` // Assuming you store the token in localStorage
     }
 });
 
 API.interceptors.request.use(
+    
     (config) => {
+        console.log("Sending request to:", config.url);
+  console.log("Request payload:", config.data);
         const token = localStorage.getItem('token');
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;

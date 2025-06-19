@@ -19,18 +19,37 @@ export const registeruser=createAsyncThunk('auth/register',async(userData,thunkA
 ////////////////////////////////////////////
 
 
-export const loginUser=createAsyncThunk('auth/login',async(userData,thunkAPI)=>{
-    try {
-        const response=await API.post('/auth/login',userData);
-        return response.data;
-    } catch (error) {
-        return thunkAPI.rejectWithValue({
-            message: error.response?.data?.message || "Login failed",
-            status: error.response?.status || 500
-        });
+// export const loginUser=createAsyncThunk('auth/login',async(userData,thunkAPI)=>{
+//     try {
+//         const response=await API.post('/auth/login',userData);
+//         console.log("API login payload:", userData);
+//         console.log("API login response:", response.data);
+//         return response.data;
+//     } catch (error) {
+//         return thunkAPI.rejectWithValue({
+//             message: error.response?.data?.message || "Login failed",
+//             status: error.response?.status || 500
+//         });
         
+//     }
+// })
+
+export const loginUser = createAsyncThunk(
+  'auth/login',
+  async (userData, thunkAPI) => {
+    try {
+      const response = await API.post('/auth/login', userData);
+      return response.data;
+    } catch (error) {
+      console.log("Login error response:", error.response?.data);
+      return thunkAPI.rejectWithValue({
+        message: error.response?.data?.message || "Login failed",
+        status: error.response?.status || 500
+      });
     }
-})
+  }
+);
+
 
 //////////////////////////////////////////////
 

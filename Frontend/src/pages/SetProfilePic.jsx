@@ -1,94 +1,117 @@
-import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
-import { toast } from 'react-toastify'
-import uploadImage from '../features/upload/uploadApi.js'
-import { useState, useEffect } from 'react'
-
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import uploadImage from '../features/upload/uploadApi.js';
 
 const SetProfilePic = () => {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const {avatarImage,isAvatarImageSet,loading,error,success} = useSelector((state) => state.upload);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { avatarImage, isAvatarImageSet, loading, error } = useSelector((state) => state.upload);
 
-    const [selectedImage, setSelectedImage] = useState(null);
-    const [imagePreview, setImagePreview] = useState(null);
-    const toastOptions = {
-        position: 'bottom-right',
-        autoClose: 8000,
-        pauseOnHover: true,
-        draggable: true,
-        theme: 'dark',
-    };
-    useEffect(() => {
-        const storedUser = localStorage.getItem('chat-app-user');
-        if (!storedUser) {
-            navigate('/login');
-        }
-        if (isAvatarImageSet) {
-            toast.success("Profile picture set successfully", toastOptions);
-            localStorage.setItem('chat-app-user', JSON.stringify({ ...JSON.parse(localStorage.getItem('chat-app-user')), avatarImage }));
-            navigate('/');
-        }
-    }, [navigate,isAvatarImageSet, avatarImage, toastOptions]);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
-    const handleUpload=(e)=>{
-        if(!file){
-            toast.error("Please select an image", toastOptions);
-            return;
-        }
-        const file = e.target.files[0];
-        dispatch(uploadImage(file));
-        setSelectedImage(file);
-        setImagePreview(URL.createObjectURL(file));
-
-    if (file && file.size > (1024 * 1024)*5) { // Check if file size is greater than 5MB
-            toast.error("File size should be less than 1MB", toastOptions);
-            setSelectedImage(null);
-            setImagePreview(null);
-            return;
-        }
-        
-    }
-
-    const handleSelectFile = (e) => {
-    setFile(e.target.files[0]);
+  const toastOptions = {
+    position: 'bottom-right',
+    autoClose: 8000,
+    pauseOnHover: true,
+    draggable: true,
+    theme: 'dark',
   };
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem('chat-app-user');
+    if (!storedUser) {
+      navigate('/login');
+      return;
+    }
 
+    if (isAvatarImageSet) {
+      
+      
+      setTimeout(() => {
+      toast.success("Profile picture set successfully", toastOptions);
+    }, 100);
+      // localStorage.setItem(
+      //   'chat-app-user',
+      //   JSON.stringify({
+      //     ...JSON.parse(storedUser),
+      //     avatarImage,
+      //   })
+      // );
+      navigate('/chat');
+    }
+  }, [navigate, isAvatarImageSet, avatarImage]);
+
+  useEffect(() => {
+  console.log("Component Mounted");
+  console.log({ avatarImage, isAvatarImageSet, loading, error });
+}, [avatarImage, isAvatarImageSet, loading, error]);
+
+
+  const handleSelectFile = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 1024 * 1024 * 1) { // 1MB limit
+      toast.error("File size should be less than 1MB", toastOptions);
+      return;
+    }
+
+    setSelectedImage(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
+  const handleUpload = () => {
+    if (!selectedImage) {
+      toast.error("Please select an image", toastOptions);
+      return;
+    }
+
+    dispatch(uploadImage(selectedImage));
+  };
 
   return (
     <FormContainer>
-        <div>
-            {file && (
-                <center>
-                <img src={imagePreview} alt="Selected" className="selected-image" />
-                </center>
-            )}
-            <input
-          type="file"
-          id="img"
-          onChange={handleSelectFile}
-          style={{ display: "none" }}
-        />
-        <label htmlFor="img">Click me to upload Profile Picture</label>
+      <h2>Select Your Profile Picture</h2>
 
-        {file && (
-          <button onClick={handleUpload} className="btn-green">
-            {loading ? "Uploading..." : "Save"}
-          </button>
-        )}
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        </div>
-        <ToastContainer />
+      {imagePreview && (
+        <center>
+          <img
+            src={imagePreview}
+            alt="Selected"
+            className="selected-image"
+            style={{ width: '150px', height: '150px', borderRadius: '50%', marginBottom: '1rem' }}
+          />
+        </center>
+      )}
+
+      <input
+        type="file"
+        id="img"
+        onChange={handleSelectFile}
+        accept="image/*"
+        style={{ display: 'none' }}
+      />
+      <label htmlFor="img">Click me to upload Profile Picture</label>
+
+      {selectedImage && (
+        <button onClick={handleUpload} disabled={loading}>
+          {loading ? 'Uploading...' : 'Save'}
+        </button>
+      )}
+
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      <ToastContainer />
     </FormContainer>
-  )
-}
+  );
+};
 
 export default SetProfilePic;
-
-
 
 const FormContainer = styled.div`
   height: 100vh;
@@ -99,6 +122,11 @@ const FormContainer = styled.div`
   gap: 1rem;
   align-items: center;
   background: linear-gradient(to bottom, #128c7e 0%, #128c7e 20%, #dcdcdc 20%, #dcdcdc 100%);
+
+  h2 {
+    color: white;
+    margin-bottom: 1rem;
+  }
 
   label {
     background-color: white;
@@ -122,6 +150,11 @@ const FormContainer = styled.div`
 
     &:hover {
       background-color: #075e54;
+    }
+
+    &:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
     }
   }
 `;
