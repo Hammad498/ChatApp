@@ -46,7 +46,7 @@ const io=new Server(server,{
 global.onlineUsers=new Map();
 
 
-//socket connection
+//socket connection////////////
 io.on("connection",(socket)=>{
   console.log(`socket is connected:${socket.id}`);
   global.chatSocket=socket;
